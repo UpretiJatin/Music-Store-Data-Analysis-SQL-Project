@@ -2,26 +2,13 @@ create database Music_Store;
 
 use Music_Store;
 
-/*
-
-Q6: Write query to return the email, first name, last name, & Genre of all Rock Music listeners.
-
-Q7: Let's invite the artists who have written the most rock music in our dataset.
-
-Q8: Return all the track names that have a song length longer than the average song length.
-
-Q9: Find how much amount spent by each customer on artists? Write a query to return customer name, artist name and total spent
-
-Q10: We want to find out the most popular music Genre for each country.
-
-Q11: Write a query that determines the customer that has spent the most on music for each country.*/
-
 
 /*Q1: Who is the senior most employee based on job title?*/
 
 select first_name, last_name, title from employee
 order by levels desc
 limit 1;
+
 
 /*Q2: Which countries have the most Invoices?*/
 
@@ -30,18 +17,21 @@ group by billing_country
 order by Country desc
 limit 1;
 
-/*Q3: What are top 3 values of total invoice?*/
+
+/*Q3: What are the top 3 values of the total invoice?*/
 
 select invoice_id, round(total,0) as Total from invoice
 order by Total desc
 limit 3;
 
-/*Q4: Which city has the best customers? We would like to throw a promotional Music Festival in the city we made the most money.*/
+
+/*Q4: Which city has the best customers? We would like to throw a promotional Music Festival in the city where we made the most money.*/
 
 select billing_city, round(sum(total),2) as Total from invoice
 group by billing_city
 order by Total desc
 limit 1;
+
 
 /* Q5: Who is the best customer? The customer who has spent the most money will be declared the best customer. 
 Write a query that returns the person who has spent the most money.*/
@@ -51,7 +41,8 @@ invoice i inner join customer c using(customer_id)
 group by c.customer_id
 order by Total desc limit 5;
 
-/* Q6: Write query to return the email, first name, last name, & Genre of all Rock Music listeners. 
+
+/* Q6: Write a query to return the email, first name, last name, & Genre of all Rock Music listeners. 
 Return your list ordered alphabetically by email starting with A. */
 
 select Distinct c.customer_id, c.first_name, c.last_name, c.email, g.name from 
@@ -61,6 +52,7 @@ INNER JOIN track t using(track_id)
 INNER JOIN genre g using(genre_id)
 where g.name = "Rock"
 order by c.email asc;
+
 
 /* Q7: Let's invite the artists who have written the most rock music in our dataset. 
 Write a query that returns the Artist name and total track count of the top 10 rock bands. */
@@ -76,6 +68,7 @@ order by Number_of_songs desc limit 10;
 
 select * from track;
 
+
 /* Q8: Return all the track names that have a song length longer than the average song length. 
 Return the Name and Milliseconds for each track. Order by the song length with the longest songs listed first. */
 
@@ -84,7 +77,8 @@ where milliseconds > (select round(avg(milliseconds),2) as Avg_length from track
 order by milliseconds desc;
 
 
-/* Q9: Find how much amount spent by each customer on artists? Write a query to return customer name, artist name and total spent */
+
+/* Q9: Find how much amount spent by each customer on artists. Write a query to return the customer name, artist name, and total spent */
 
 with best_artist as
 (select a.artist_id, a.name, round(sum(il.unit_price*il.quantity),2) as Amount_Spent from 
@@ -102,6 +96,7 @@ inner join album2 al using(album_id)
 inner join best_artist bs using(artist_id)
 group by 1,2,3,4
 order by 5 desc;
+
 
 
 /* Q10: We want to find out the most popular music Genre for each country. We determine the most popular genre as the genre 
@@ -122,6 +117,7 @@ select * from popular_genre
 where row_no <= 1;
 
 
+
 /* Q11: Write a query that determines the customer that has spent the most on music for each country. 
 Write a query that returns the country along with the top customer and how much they spent. 
 For countries where the top amount spent is shared, provide all customers who spent this amount. */
@@ -135,3 +131,4 @@ WITH Customter_with_country AS (
 		GROUP BY 1,2,3,4
 		ORDER BY 4 ASC,5 DESC)
 SELECT * FROM Customter_with_country WHERE RowNo <= 1
+
